@@ -1,20 +1,20 @@
 # Assignment 02 OTP Product Shop
 
-Project Jakarta Servlet/JSP cho bai tap 02, bo sung xac thuc tai khoan bang OTP qua email va quan ly san pham.
+Project Jakarta Servlet/JSP cho bài tập 02, bổ sung xác thực tài khoản bằng OTP qua email và quản lý sản phẩm.
 
-## Muc tieu bai tap
+## Mục tiêu bài tập
 
-1. Kich hoat tai khoan bang OTP gui qua email khi dang ky.
-2. Thuc hien chuc nang dang nhap, dang xuat.
-3. Ho tro quen mat khau va xac nhan OTP qua email de dat lai mat khau.
-4. Bo sung bang `products` voi moi lien he 1-n voi `categories`.
-5. CRUD san pham trong trang quan tri.
-6. Hien thi 10 san pham moi nhat o trang chu.
-7. Hien thi danh sach san pham co phan trang 6 san pham/trang tai URL `/product`.
-8. Hien thi chi tiet san pham tai `/product/detail?id=...`.
-9. Ho tro upload anh san pham bang Multipart.
+1. Kích hoạt tài khoản bằng OTP gửi qua email khi đăng ký.
+2. Thực hiện chức năng đăng nhập, đăng xuất.
+3. Hỗ trợ quên mật khẩu và xác nhận OTP qua email để đặt lại mật khẩu.
+4. Bổ sung bảng `products` với mối liên hệ 1-n với `categories`.
+5. CRUD sản phẩm trong trang quản trị.
+6. Hiển thị 10 sản phẩm mới nhất ở trang chủ.
+7. Hiển thị danh sách sản phẩm có phân trang 6 sản phẩm/trang tại URL `/product`.
+8. Hiển thị chi tiết sản phẩm tại `/product/detail?id=...`.
+9. Hỗ trợ upload ảnh sản phẩm bằng Multipart.
 
-## Cong nghe
+## Công nghệ
 
 - Java 17
 - Maven WAR
@@ -24,39 +24,39 @@ Project Jakarta Servlet/JSP cho bai tap 02, bo sung xac thuc tai khoan bang OTP 
 - Jakarta Mail
 - BCrypt
 
-## Chuc nang da co
+## Chức năng đã có
 
-### Xac thuc va OTP
+### Xác thực và OTP
 
-- Dang ky tai khoan voi `fullName`, `username`, `email`, `password`.
-- Gui OTP kich hoat tai khoan qua email.
-- Xac thuc OTP de mo khoa tai khoan moi.
-- Dang nhap bang username hoac email.
-- Dang xuat khoi he thong.
-- Gui OTP quen mat khau qua email.
-- Xac thuc OTP quen mat khau va dat lai mat khau moi.
+- Đăng ký tài khoản với `fullName`, `username`, `email`, `password`.
+- Gửi OTP kích hoạt tài khoản qua email.
+- Xác thực OTP để mở khóa tài khoản mới.
+- Đăng nhập bằng username hoặc email.
+- Đăng xuất khỏi hệ thống.
+- Gửi OTP quên mật khẩu qua email.
+- Xác thực OTP quên mật khẩu và đặt lại mật khẩu mới.
 
 ### Product Shop
 
-- Trang chu `/home` hien thi 10 san pham moi nhat.
-- Trang `/product` hien thi danh sach san pham co phan trang.
-- Trang `/product/detail` hien thi thong tin chi tiet san pham.
-- Trang admin `/admin/products` cho phep them, sua, xoa san pham.
-- Ho tro upload anh san pham tu may tinh hoac dung link anh.
+- Trang chủ `/home` hiển thị 10 sản phẩm mới nhất.
+- Trang `/product` hiển thị danh sách sản phẩm có phân trang.
+- Trang `/product/detail` hiển thị thông tin chi tiết sản phẩm.
+- Trang admin `/admin/products` cho phép thêm, sửa, xóa sản phẩm.
+- Hỗ trợ upload ảnh sản phẩm từ máy tính hoặc dùng link ảnh.
 
-## Cau truc chinh
+## Cấu trúc chính
 
 - `src/main/java/vn/iotstar/controller`: servlet cho auth, home, product.
-- `src/main/java/vn/iotstar/controller/admin`: CRUD san pham trong trang admin.
+- `src/main/java/vn/iotstar/controller/admin`: CRUD sản phẩm trong trang admin.
 - `src/main/java/vn/iotstar/entity`: `UserAccount`, `OtpVerification`, `Product`, `Category`.
-- `src/main/java/vn/iotstar/service`: xu ly auth, OTP, product, category.
-- `src/main/resources/database.sql`: script tao va cap nhat bang du lieu.
-- `src/main/resources/application.properties`: cau hinh upload, mail, phan trang.
-- `src/main/webapp/views/auth`: giao dien login/register/verify OTP/forgot password.
-- `src/main/webapp/views/product`: giao dien danh sach va chi tiet san pham.
-- `src/main/webapp/views/admin`: giao dien quan tri category va product.
+- `src/main/java/vn/iotstar/service`: xử lý auth, OTP, product, category.
+- `src/main/resources/database.sql`: script tạo và cập nhật bảng dữ liệu.
+- `src/main/resources/application.properties`: cấu hình upload, mail, phân trang.
+- `src/main/webapp/views/auth`: giao diện login/register/verify OTP/forgot password.
+- `src/main/webapp/views/product`: giao diện danh sách và chi tiết sản phẩm.
+- `src/main/webapp/views/admin`: giao diện quản trị category và product.
 
-## Route chinh
+## Route chính
 
 - `/register`
 - `/verify-otp`
@@ -70,28 +70,28 @@ Project Jakarta Servlet/JSP cho bai tap 02, bo sung xac thuc tai khoan bang OTP 
 - `/product/detail?id=...`
 - `/admin/products`
 
-## Co so du lieu
+## Cơ sở dữ liệu
 
-Project su dung cac bang chinh:
+Project sử dụng các bảng chính:
 
 - `users`
 - `otp_verifications`
 - `categories`
 - `products`
 
-Script tao bang nam trong file `src/main/resources/database.sql`.
+Script tạo bảng nằm trong file `src/main/resources/database.sql`.
 
-## Cau hinh mail
+## Cấu hình mail
 
-Mac dinh file `src/main/resources/application.properties` dang de:
+Mặc định file `src/main/resources/application.properties` đang để:
 
 ```properties
 app.mail.mock=true
 ```
 
-Che do nay khong gui email that. OTP se duoc tra ve trong thong bao hoac in ra console de test nhanh.
+Chế độ này không gửi email thật. OTP sẽ được trả về trong thông báo hoặc in ra console để test nhanh.
 
-Neu muon gui email that, sua:
+Nếu muốn gửi email thật, sửa:
 
 ```properties
 app.mail.mock=false
@@ -105,7 +105,7 @@ app.mail.starttls=true
 app.mail.ssl=false
 ```
 
-## Chay project
+## Chạy project
 
 Build project:
 
@@ -119,23 +119,23 @@ WAR sau khi build:
 target/assignment02-otp-productshop.war
 ```
 
-Deploy len Tomcat, sau do truy cap:
+Deploy lên Tomcat, sau đó truy cập:
 
 - `http://localhost:8080/assignment02-otp-productshop/home`
 - `http://localhost:8080/assignment02-otp-productshop/product`
 - `http://localhost:8080/assignment02-otp-productshop/login`
 - `http://localhost:8080/assignment02-otp-productshop/admin/products`
 
-## Tai khoan seed mac dinh
+## Tài khoản seed mặc định
 
-Project co seed san tai khoan admin:
+Project có seed sẵn tài khoản admin:
 
 - Username: `admin`
 - Email: `admin@example.com`
 - Password: `Admin@123`
 
-## Ghi chu
+## Ghi chú
 
-- `app.product.page-size=6` quy dinh so san pham moi trang.
-- Thu muc upload mac dinh duoc cau hinh boi `app.upload.dir`.
-- Ten display name cua web app la `Assignment 02 OTP Product Shop`.
+- `app.product.page-size=6` quy định số sản phẩm mỗi trang.
+- Thư mục upload mặc định được cấu hình bởi `app.upload.dir`.
+- Tên display name của web app là `Assignment 02 OTP Product Shop`.
