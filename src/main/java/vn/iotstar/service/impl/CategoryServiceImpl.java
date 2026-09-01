@@ -15,7 +15,7 @@ public class CategoryServiceImpl implements ICategoryService {
         validateCategory(category);
         Category existing = findByCategoryname(category.getCategoryname());
         if (existing != null) {
-            throw new IllegalArgumentException("Category name đã tồn tại.");
+            throw new IllegalArgumentException("The category name already exists.");
         }
         categoryDao.insert(category);
     }
@@ -55,12 +55,12 @@ public class CategoryServiceImpl implements ICategoryService {
         validateCategory(category);
         Category current = findById(category.getCategoryid());
         if (current == null) {
-            throw new IllegalArgumentException("Category không tồn tại.");
+            throw new IllegalArgumentException("The category does not exist.");
         }
 
         Category duplicate = findByCategoryname(category.getCategoryname());
         if (duplicate != null && duplicate.getCategoryid() != category.getCategoryid()) {
-            throw new IllegalArgumentException("Category name đã tồn tại.");
+            throw new IllegalArgumentException("The category name already exists.");
         }
 
         categoryDao.update(category);
@@ -76,10 +76,10 @@ public class CategoryServiceImpl implements ICategoryService {
 
     private void validateCategory(Category category) {
         if (category == null) {
-            throw new IllegalArgumentException("Dữ liệu category không hợp lệ.");
+            throw new IllegalArgumentException("The category data is not valid.");
         }
         if (category.getCategoryname() == null || category.getCategoryname().trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name không được để trống.");
+            throw new IllegalArgumentException("The category name must not be empty.");
         }
         category.setCategoryname(category.getCategoryname().trim());
     }

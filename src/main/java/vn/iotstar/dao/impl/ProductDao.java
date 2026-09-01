@@ -4,22 +4,20 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import vn.iotstar.config.JpaConfig;
-import vn.iotstar.dao.ICategoryDao;
-import vn.iotstar.entity.Category;
+import vn.iotstar.dao.IProductDao;
+import vn.iotstar.entity.Product;
 
-public class CategoryDao implements ICategoryDao {
-
+public class ProductDao implements IProductDao {
     @Override
-    public void insert(Category category) {
+    public void insert(Product product) {
         EntityManager entityManager = JpaConfig.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(category);
+            entityManager.persist(product);
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -32,12 +30,12 @@ public class CategoryDao implements ICategoryDao {
     }
 
     @Override
-    public void update(Category category) {
+    public void update(Product product) {
         EntityManager entityManager = JpaConfig.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.merge(category);
+            entityManager.merge(product);
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -50,16 +48,16 @@ public class CategoryDao implements ICategoryDao {
     }
 
     @Override
-    public void delete(int cateid) throws Exception {
+    public void delete(Long productId) throws Exception {
         EntityManager entityManager = JpaConfig.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Category category = entityManager.find(Category.class, cateid);
-            if (category == null) {
-                throw new Exception("No category was found for id = " + cateid);
+            Product product = entityManager.find(Product.class, productId);
+            if (product == null) {
+                throw new Exception("No catalog entry was found for id = " + productId);
             }
-            entityManager.remove(category);
+            entityManager.remove(product);
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -72,24 +70,14 @@ public class CategoryDao implements ICategoryDao {
     }
 
     @Override
-    public Category findById(int cateid) {
+    public Product findById(Long productId) {
         EntityManager entityManager = JpaConfig.getEntityManager();
         try {
-            return entityManager.find(Category.class, cateid);
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public Category findByCategoryname(String name) {
-        EntityManager entityManager = JpaConfig.getEntityManager();
-        String jpql = "SELECT c FROM Category c WHERE LOWER(c.categoryname) = LOWER(:catename)";
-        try {
-            TypedQuery<Category> query = entityManager.createQuery(jpql, Category.class);
-            query.setParameter("catename", name);
+            TypedQuery<Product> query = entityManager.createQuery(
+                    "SELECT p FROM Product p JOIN FETCH p.category WHERE p.productId = :id", Product.class);
+            query.setParameter("id", productId);
             return query.getSingleResult();
-        } catch (NoResultException e) {
+        } catch (Exception e) {
             return null;
         } finally {
             entityManager.close();
@@ -97,11 +85,22 @@ public class CategoryDao implements ICategoryDao {
     }
 
     @Override
-    public List<Category> findAll() {
+    public List<Product> findAll() {
         EntityManager entityManager = JpaConfig.getEntityManager();
         try {
-            TypedQuery<Category> query =
-                    entityManager.createNamedQuery("Category.findAll", Category.class);
+            return entityManager.createNamedQuery("Product.findAll", Product.class).getResultList();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public List<Product> findLatestActive(int limit) {
+        EntityManager entityManager = JpaConfig.getEntityManager();
+        try {
+            TypedQuery<Product> query = entityManager.createQuery(
+                    "SELECT p FROM Product p JOIN FETCH p.category ORDER BY p.productId DESC", Product.class);
+            query.setMaxResults(limit);
             return query.getResultList();
         } finally {
             entityManager.close();
@@ -109,12 +108,13 @@ public class CategoryDao implements ICategoryDao {
     }
 
     @Override
-    public List<Category> searchByName(String catname) {
+    public List<Product> findActive(int page, int pageSize) {
         EntityManager entityManager = JpaConfig.getEntityManager();
-        String jpql = "SELECT c FROM Category c WHERE LOWER(c.categoryname) LIKE LOWER(:catename) ORDER BY c.categoryid DESC";
         try {
-            TypedQuery<Category> query = entityManager.createQuery(jpql, Category.class);
-            query.setParameter("catename", "%" + catname + "%");
+            TypedQuery<Product> query = entityManager.createQuery(
+                    "SELECT p FROM Product p JOIN FETCH p.category ORDER BY p.productId DESC", Product.class);
+            query.setFirstResult(Math.max(0, (page - 1) * pageSize));
+            query.setMaxResults(pageSize);
             return query.getResultList();
         } finally {
             entityManager.close();
@@ -122,25 +122,10 @@ public class CategoryDao implements ICategoryDao {
     }
 
     @Override
-    public List<Category> findAll(int page, int pagesize) {
+    public int countActive() {
         EntityManager entityManager = JpaConfig.getEntityManager();
         try {
-            TypedQuery<Category> query =
-                    entityManager.createNamedQuery("Category.findAll", Category.class);
-            query.setFirstResult(page * pagesize);
-            query.setMaxResults(pagesize);
-            return query.getResultList();
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public int count() {
-        EntityManager entityManager = JpaConfig.getEntityManager();
-        String jpql = "SELECT COUNT(c) FROM Category c";
-        try {
-            Query query = entityManager.createQuery(jpql);
+            Query query = entityManager.createQuery("SELECT COUNT(p) FROM Product p");
             return ((Long) query.getSingleResult()).intValue();
         } finally {
             entityManager.close();

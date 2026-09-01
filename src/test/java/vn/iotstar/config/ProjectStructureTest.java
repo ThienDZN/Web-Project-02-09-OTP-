@@ -9,4 +9,9 @@ class ProjectStructureTest {
     void uploadDirectoryConstantShouldExist() {
         assertNotNull(UploadConstants.DIR);
     }
+
+    @Test
+    void productPageSizeShouldLoad() {
+        assertNotNull(AppProperties.get("app.product.page-size", "6"));
+    }
 }

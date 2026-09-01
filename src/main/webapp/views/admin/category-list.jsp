@@ -6,83 +6,75 @@
 <head>
     <meta charset="UTF-8">
     <title>Category List</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 32px; }
-        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .message { padding: 12px; background: #edf7ed; color: #1e4620; border: 1px solid #b7dfb9; margin-bottom: 16px; }
-        .actions { display: flex; gap: 8px; align-items: center; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: middle; }
-        th { background: #f5f5f5; }
-        img { width: 180px; height: 110px; object-fit: cover; border-radius: 6px; }
-        .button, button {
-            display: inline-block; padding: 8px 12px; border: 1px solid #1d4ed8; background: #2563eb;
-            color: white; text-decoration: none; border-radius: 6px; cursor: pointer;
-        }
-        .button-danger { background: #dc2626; border-color: #b91c1c; }
-        .search-input { min-width: 260px; padding: 8px; }
-    </style>
+    <link rel="stylesheet" href="<c:url value='/assets/app-theme.css'/>">
 </head>
-<body>
-<div class="topbar">
-    <div>
-        <h1>Category Management</h1>
-        <p>Tổng số category: ${fn:length(listcate)}</p>
+<body class="theme-music">
+<div class="theme-shell">
+    <div class="theme-nav">
+        <div class="theme-brand">
+            Category Management
+            <small>One-to-many relation support for the assignment catalog entries</small>
+        </div>
+        <div class="theme-nav-links">
+            <a class="btn btn-secondary" href="<c:url value='/home'/>">Home</a>
+            <a class="btn btn-secondary" href="<c:url value='/admin/products'/>">Catalog</a>
+            <a class="btn btn-primary" href="<c:url value='/admin/category/add'/>">Add Category</a>
+        </div>
     </div>
-    <a class="button" href="<c:url value='/admin/category/add'/>">Add Category</a>
+
+    <c:if test="${not empty param.message}"><div class="message-box">${param.message}</div></c:if>
+
+    <section class="panel section-panel">
+        <div class="section-head">
+            <div>
+                <h1>Category table</h1>
+                <p>Total categories: ${fn:length(listcate)}</p>
+            </div>
+        </div>
+
+        <form action="<c:url value='/admin/categories'/>" method="get" class="search-row">
+            <input class="form-input" type="text" name="keyword" value="${keyword}" placeholder="Search by category name">
+            <button class="btn btn-primary" type="submit">Search</button>
+            <a class="btn btn-secondary" href="<c:url value='/admin/categories'/>">Reset</a>
+        </form>
+
+        <c:choose>
+            <c:when test="${empty listcate}">
+                <div class="empty-box">There are no categories yet.</div>
+            </c:when>
+            <c:otherwise>
+                <table class="data-table">
+                    <tr>
+                        <th>No.</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <c:forEach items="${listcate}" var="cate" varStatus="stt">
+                        <tr>
+                            <td>${stt.index + 1}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${empty cate.images}"><img class="table-thumb" src="<c:url value='/assets/no-image.svg'/>" alt="No image"></c:when>
+                                    <c:when test="${fn:startsWith(cate.images, 'http://') or fn:startsWith(cate.images, 'https://')}"><img class="table-thumb" src="${cate.images}" alt="${cate.categoryname}"></c:when>
+                                    <c:otherwise><img class="table-thumb" src="<c:url value='/image?fname=${cate.images}'/>" alt="${cate.categoryname}"></c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>${cate.categoryname}</td>
+                            <td><c:choose><c:when test="${cate.status == 1}">Visible</c:when><c:otherwise>Locked</c:otherwise></c:choose></td>
+                            <td>
+                                <div class="action-row">
+                                    <a class="btn btn-secondary" href="<c:url value='/admin/category/edit?id=${cate.categoryid}'/>">Edit</a>
+                                    <a class="btn btn-danger" href="<c:url value='/admin/category/delete?id=${cate.categoryid}'/>">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:otherwise>
+        </c:choose>
+    </section>
 </div>
-
-<c:if test="${not empty param.message}">
-    <div class="message">${param.message}</div>
-</c:if>
-
-<form action="<c:url value='/admin/categories'/>" method="get" style="margin-bottom: 20px;">
-    <div class="actions">
-        <input class="search-input" type="text" name="keyword" value="${keyword}" placeholder="Search by category name">
-        <button type="submit">Search</button>
-        <a class="button" href="<c:url value='/admin/categories'/>">Reset</a>
-    </div>
-</form>
-
-<table>
-    <tr>
-        <th>STT</th>
-        <th>Image</th>
-        <th>Category name</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
-    <c:forEach items="${listcate}" var="cate" varStatus="stt">
-        <tr>
-            <td>${stt.index + 1}</td>
-            <td>
-                <c:choose>
-                    <c:when test="${empty cate.images}">
-                        <img src="<c:url value='/assets/no-image.svg'/>" alt="No image">
-                    </c:when>
-                    <c:when test="${fn:startsWith(cate.images, 'http://') or fn:startsWith(cate.images, 'https://')}">
-                        <img src="${cate.images}" alt="${cate.categoryname}">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="<c:url value='/image?fname=${cate.images}'/>" alt="${cate.categoryname}">
-                    </c:otherwise>
-                </c:choose>
-            </td>
-            <td>${cate.categoryname}</td>
-            <td>
-                <c:choose>
-                    <c:when test="${cate.status == 1}">Hoạt động</c:when>
-                    <c:otherwise>Khóa</c:otherwise>
-                </c:choose>
-            </td>
-            <td>
-                <a class="button" href="<c:url value='/admin/category/edit?id=${cate.categoryid}'/>">Sửa</a>
-                <a class="button button-danger"
-                   href="<c:url value='/admin/category/delete?id=${cate.categoryid}'/>"
-                   onclick="return confirm('Bạn có chắc muốn xóa category này?');">Xóa</a>
-            </td>
-        </tr>
-    </c:forEach>
-</table>
 </body>
 </html>

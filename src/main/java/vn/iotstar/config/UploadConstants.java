@@ -3,9 +3,8 @@ package vn.iotstar.config;
 import java.io.File;
 
 public final class UploadConstants {
-    public static final String DIR = System.getProperty("user.home")
-            + File.separator + "uploads"
-            + File.separator + "jpa-category-crud-assignment01";
+    public static final String DIR = AppProperties.get("app.upload.dir",
+            System.getProperty("user.home") + File.separator + "uploads" + File.separator + "assignment02-otp-productshop");
 
     private UploadConstants() {
     }

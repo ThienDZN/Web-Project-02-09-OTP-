@@ -26,7 +26,7 @@ public class Category implements Serializable {
     @Column(name = "CategoryId")
     private int categoryid;
 
-    @NotBlank(message = "Category name không được để trống")
+    @NotBlank(message = "The category name must not be empty.")
     @Column(name = "CategoryName", columnDefinition = "nvarchar(50) not null")
     private String categoryname;
 
@@ -38,6 +38,9 @@ public class Category implements Serializable {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Video> videos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products = new ArrayList<>();
 
     public int getCategoryid() {
         return categoryid;
@@ -89,5 +92,13 @@ public class Category implements Serializable {
         videos.remove(video);
         video.setCategory(null);
         return video;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

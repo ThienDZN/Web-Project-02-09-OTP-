@@ -38,7 +38,7 @@ public class CategoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String url = req.getRequestURI();
+        String url = req.getServletPath();
 
         if (url.contains("/admin/categories")) {
             showList(req, resp);
@@ -64,7 +64,7 @@ public class CategoryController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String url = req.getRequestURI();
+        String url = req.getServletPath();
         if (url.contains("/admin/category/insert")) {
             insertCategory(req, resp);
             return;
@@ -94,7 +94,7 @@ public class CategoryController extends HttpServlet {
         Category category = categoryService.findById(id);
         if (category == null) {
             redirectWithMessage(resp, req.getContextPath() + "/admin/categories",
-                    "Không tìm thấy category cần sửa.");
+                    "Category entry not found.");
             return;
         }
         req.setAttribute("cate", category);
@@ -111,7 +111,7 @@ public class CategoryController extends HttpServlet {
         try {
             categoryService.insert(category);
             redirectWithMessage(resp, req.getContextPath() + "/admin/categories",
-                    "Thêm category thành công.");
+                    "Category created successfully.");
         } catch (Exception e) {
             req.setAttribute("error", e.getMessage());
             req.setAttribute("cate", category);
@@ -125,7 +125,7 @@ public class CategoryController extends HttpServlet {
         Category category = categoryService.findById(categoryid);
         if (category == null) {
             redirectWithMessage(resp, req.getContextPath() + "/admin/categories",
-                    "Category không tồn tại.");
+                    "Category does not exist.");
             return;
         }
 
@@ -136,7 +136,7 @@ public class CategoryController extends HttpServlet {
         try {
             categoryService.update(category);
             redirectWithMessage(resp, req.getContextPath() + "/admin/categories",
-                    "Cập nhật category thành công.");
+                    "Category updated successfully.");
         } catch (Exception e) {
             req.setAttribute("error", e.getMessage());
             req.setAttribute("cate", category);
@@ -153,7 +153,7 @@ public class CategoryController extends HttpServlet {
             }
             categoryService.delete(id);
             redirectWithMessage(resp, req.getContextPath() + "/admin/categories",
-                    "Xóa category thành công.");
+                    "Category deleted successfully.");
         } catch (Exception e) {
             redirectWithMessage(resp, req.getContextPath() + "/admin/categories", e.getMessage());
         }
@@ -184,7 +184,7 @@ public class CategoryController extends HttpServlet {
                 return savedName;
             }
         } catch (FileNotFoundException e) {
-            throw new IOException("Không thể lưu file ảnh.", e);
+            throw new IOException("Unable to save the uploaded image file.", e);
         }
 
         if (imageLink != null) {
@@ -203,7 +203,7 @@ public class CategoryController extends HttpServlet {
         try {
             return Integer.parseInt(raw);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Id không hợp lệ.");
+            throw new IllegalArgumentException("The provided id is not valid.");
         }
     }
 

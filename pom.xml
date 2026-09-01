@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>vn.iotstar</groupId>
-    <artifactId>jpa-category-crud-assignment01</artifactId>
+    <artifactId>assignment02-otp-productshop</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
 
-    <name>JPA Category CRUD Assignment 01</name>
-    <description>Jakarta Servlet/JSP + JPA CRUD Category assignment</description>
+    <name>Assignment 02 OTP Product Shop</name>
+    <description>Jakarta Servlet/JSP assignment with OTP email authentication and product management</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -43,7 +43,6 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <version>${jstl.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -69,19 +68,26 @@
             <artifactId>jakarta.el</artifactId>
             <version>4.0.2</version>
         </dependency>
-
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>${mssql.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.16</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
+            <version>2.0.3</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -91,7 +97,7 @@
     </dependencies>
 
     <build>
-        <finalName>jpa-category-crud-assignment01</finalName>
+        <finalName>assignment02-otp-productshop</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,1 +1,1 @@
-<jsp:forward page="/admin/categories" />
+<jsp:forward page="/home" />
